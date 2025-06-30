@@ -1,23 +1,27 @@
-FROM debian:latest
+FROM python:3.11-slim
 
-# Install Python and pip
-RUN apt update && apt upgrade -y && \
-    apt install -y python3 python3-pip git curl
+# Install OS-level dependencies needed to build cryptg, psycopg2, etc.
+RUN apt update && apt install -y \
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    libpq-dev \
+    python3-dev \
+    git \
+    curl
 
-# Set working directory inside container
+# Set working directory
 WORKDIR /app
 
-# Copy requirements first (important!)
+# Copy requirements first
 COPY requirements.txt .
 
-# Upgrade pip safely
-RUN python3 -m pip install --break-system-packages -U pip
-
-# Install Python dependencies
+# Upgrade pip and install dependencies
+RUN python3 -m pip install --upgrade pip
 RUN python3 -m pip install -r requirements.txt
 
-# Copy the rest of your app code
+# Copy rest of your project
 COPY . .
 
-# Command to run your app (change this to your actual entry script)
+# Run your bot or script
 CMD ["python3", "RizOelLXSpam"]
